@@ -1,5 +1,6 @@
 import React from 'react';
-import { IBaseUser, IUser } from './Interface';
+import { IUser } from './Interface';
+import { Button } from '@mui/material';
 
 interface IProps {
     users: Array<IUser>;
@@ -26,20 +27,25 @@ const ViewUsers: React.FunctionComponent<IProps> = (props) => {
             <td>{user.age}</td>
             <td>{user.gender}</td>
             <td>
-              <button
+              <Button
+                variant="contained"
+                size='small'
                 onClick={() => {
                   props.editRow(user)
                 }}
                 className="button muted-button"
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="contained"
+                size='small'
+                color='error'
                 onClick={() => props.deleteUser(user.id)}
                 className="button muted-button"
               >
                 Delete
-              </button>
+              </Button>
             </td>
           </tr>
         ))

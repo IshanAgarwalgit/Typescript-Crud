@@ -2,6 +2,17 @@ import React from 'react';
 import { useState } from 'react';
 import ViewUsers from './ViewUsers';
 import { IBaseUser, IUser } from './Interface';
+import { Button } from '@mui/material';
+import { createTheme, ThemeProvider} from '@mui/material';
+import { purple } from '@mui/material/colors';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: purple[500]
+    }
+  }
+});
 
 const AddEdit = () => {
   const usersData: Array<IUser> = [];
@@ -86,13 +97,13 @@ const AddEdit = () => {
         <option value='Female'>Female</option>
       </select>
       {
-        !editing ? (<button >Add</button>) : 
-        (<><button >Update</button>
-        <button onClick={handleCancelSubmit}>Cancel</button></>)
+        !editing ? (<Button variant="contained" size='small' type="submit">Add</Button>) : 
+        (<ThemeProvider theme={theme}><Button variant="contained" size='small' color='primary' type="submit">Update</Button>
+        <Button variant="contained" color='error' size='small' onClick={handleCancelSubmit}>Cancel</Button></ThemeProvider>)
       }
     </form>
     <ViewUsers users={users} editRow={editRow} deleteUser={deleteUser}/>
-  </div>;
+    </div>;
 };
 
 export default AddEdit;
