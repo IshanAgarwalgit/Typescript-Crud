@@ -5,6 +5,8 @@ import { IBaseUser, IUser } from './Interface';
 import { Button } from '@mui/material';
 import { createTheme, ThemeProvider} from '@mui/material';
 import { purple } from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 const theme = createTheme({
   palette: {
@@ -86,16 +88,47 @@ const AddEdit = () => {
     else{
       handleUpdateSubmit()
     }}}>
-      <label>Name : </label>
-			<input type="text" name="name" value={currentUser.name} onChange={handleInputChange} required/>
-			<label>Age : </label>
-			<input type="number" name="age" value={currentUser.age} onChange={handleInputChange} required/>
-      <label>Gender : </label>
+      {/* <label>Name : </label>
+			<input type="text" name="name" value={currentUser.name} onChange={handleInputChange} required/> */}
+      <TextField
+      label="Full Name"
+      type="text"
+      name="name"
+      variant="filled" size='small'
+      required
+      value={currentUser.name}
+      onChange={handleInputChange}
+      />
+			{/* <label>Age : </label>
+			<input type="number" name="age" value={currentUser.age} onChange={handleInputChange} required/> */}
+      <TextField
+      label="Age"
+      type="number"
+      name="age"
+      variant="filled" size='small'
+      required
+      value={currentUser.age}
+      onChange={handleInputChange}
+      />
+      {/* <label>Gender : </label>
       <select name="gender" value={currentUser.gender} onChange={handleInputChange} required>
         <option value='' >Choose</option>
         <option value='Male' >Male</option>
         <option value='Female'>Female</option>
-      </select>
+      </select> */}
+      <TextField
+              select
+              label="Gender"
+              name="gender"
+              value={currentUser.gender}
+              variant="filled" size='small'
+              required
+              onChange={handleInputChange}
+            >
+                <MenuItem value=''>Choose</MenuItem>
+                <MenuItem value='Male'>Male</MenuItem>
+                <MenuItem value='Female'>Female</MenuItem>
+            </TextField>
       {
         !editing ? (<Button variant="contained" size='small' type="submit">Add</Button>) : 
         (<ThemeProvider theme={theme}><Button variant="contained" size='small' color='primary' type="submit">Update</Button>
