@@ -3,20 +3,40 @@ import { useState } from 'react';
 import ViewUsers from './ViewUsers';
 import { IBaseUser, IUser } from './Interface';
 import { Button } from '@mui/material';
-import { createTheme, ThemeProvider} from '@mui/material';
-import { purple } from '@mui/material/colors';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import { makeStyles } from "@mui/styles";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: purple[500]
-    }
-  }
+const useStyles = makeStyles({
+  container: {
+    margin: 'auto',
+    marginTop: '50px',
+    padding: "30px",
+    border: "2px solid",
+    width: '50%'
+  },
+  Cards: {
+    justifyContent: "center",
+    margin: 'auto',
+    width: '50%',
+  },
+  formfont: {
+    fontSize: '50px',
+  },
+  Inputfields: {
+    margin: 15,
+    width: "80%",
+  },
+  buttons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignContent: "center",
+  },
 });
 
 const AddEdit = () => {
+  const classes = useStyles();
   const usersData: Array<IUser> = [];
   const [ users, setUsers ] = useState(usersData)
   const initialFormState: IUser = { id: users.length, name: '', age: '', gender: ''};
@@ -77,8 +97,8 @@ const AddEdit = () => {
 		setCurrentUser({ ...currentUser, [name]: value })
 	}
 
-  return <div>
-    <form
+  return <><div className={classes.container}>
+    <form className={classes.formfont}
     onSubmit={event => {
     event.preventDefault()
     if (currentUser.gender==='') return alert("Invalid Gender")
@@ -88,9 +108,8 @@ const AddEdit = () => {
     else{
       handleUpdateSubmit()
     }}}>
-      {/* <label>Name : </label>
-			<input type="text" name="name" value={currentUser.name} onChange={handleInputChange} required/> */}
       <TextField
+      className={classes.Inputfields}
       label="Full Name"
       type="text"
       name="name"
@@ -99,9 +118,8 @@ const AddEdit = () => {
       value={currentUser.name}
       onChange={handleInputChange}
       />
-			{/* <label>Age : </label>
-			<input type="number" name="age" value={currentUser.age} onChange={handleInputChange} required/> */}
       <TextField
+      className={classes.Inputfields}
       label="Age"
       type="number"
       name="age"
@@ -110,13 +128,8 @@ const AddEdit = () => {
       value={currentUser.age}
       onChange={handleInputChange}
       />
-      {/* <label>Gender : </label>
-      <select name="gender" value={currentUser.gender} onChange={handleInputChange} required>
-        <option value='' >Choose</option>
-        <option value='Male' >Male</option>
-        <option value='Female'>Female</option>
-      </select> */}
       <TextField
+              className={classes.Inputfields}
               select
               label="Gender"
               name="gender"
@@ -129,14 +142,19 @@ const AddEdit = () => {
                 <MenuItem value='Male'>Male</MenuItem>
                 <MenuItem value='Female'>Female</MenuItem>
             </TextField>
+      <div className={classes.buttons}>
       {
         !editing ? (<Button variant="contained" size='small' type="submit">Add</Button>) : 
-        (<ThemeProvider theme={theme}><Button variant="contained" size='small' color='primary' type="submit">Update</Button>
-        <Button variant="contained" color='error' size='small' onClick={handleCancelSubmit}>Cancel</Button></ThemeProvider>)
+        (<><Button variant="contained" size='small' color='primary' type="submit">Update</Button>
+        <Button variant="contained" color='error' size='small' onClick={handleCancelSubmit}>Cancel</Button></>)
       }
+      </div>
     </form>
+    </div>
+    <div className={classes.Cards}>
     <ViewUsers users={users} editRow={editRow} deleteUser={deleteUser}/>
-    </div>;
+    </div>
+    </>;
 };
 
 export default AddEdit;

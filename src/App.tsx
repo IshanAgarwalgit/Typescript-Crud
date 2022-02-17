@@ -1,10 +1,11 @@
+import { Container } from '@mui/material';
 import React from 'react';
 import './App.css';
 import AddEdit from './Components/AddEdit';
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <AddEdit/>
     </div>
   );
