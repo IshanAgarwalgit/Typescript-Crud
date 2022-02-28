@@ -6,6 +6,8 @@ import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { makeStyles } from "@mui/styles";
+import { useSelector, useDispatch } from 'react-redux';
+import { addItem, deleteItem, updateItem } from '../Redux/actions/actions';
 
 const useStyles = makeStyles({
   container: {
@@ -36,22 +38,23 @@ const useStyles = makeStyles({
 });
 
 const AddEdit = () => {
+
+  const users = useSelector((state: any) => state.users);
+  const dispatch = useDispatch();
+
   const classes = useStyles();
-  const usersData: Array<IUser> = [];
-  const [ users, setUsers ] = useState(usersData)
   const initialFormState: IUser = { id: users.length, name: '', age: '', gender: ''};
 	const [ currentUser, setCurrentUser ] = useState(initialFormState)
 	const [ editing, setEditing ] = useState(false)
 
   const addUser = (user: IBaseUser) => {
-		const id = users.length + 1
-		setUsers([ ...users, {...user, id }])
+    const u: IUser = {...user , id: users.length +1}
+    dispatch(addItem(u));
 	}
 
   const updateUser = (id: number, updatedUser: IUser) => {
 		setEditing(false)
-
-		setUsers(users.map(user => (user.id === id ? updatedUser : user)))
+    dispatch(updateItem(updatedUser));
 	}
 
   const editRow = (user: IUser) => {
@@ -63,7 +66,7 @@ const AddEdit = () => {
   const deleteUser = (id: number) => {
 		setEditing(false)
 
-		setUsers(users.filter(user => user.id !== id))
+		dispatch(deleteItem(id));
 	}
 
   const handleSubmit = () => {
