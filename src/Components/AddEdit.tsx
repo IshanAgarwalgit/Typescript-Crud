@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
 import ViewUsers from './ViewUsers';
-import { IBaseUser, IUser } from './Interface';
+import { IUser } from './Interface';
 import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { makeStyles } from "@mui/styles";
-import { useSelector, useDispatch } from 'react-redux';
-import { addItem, deleteItem, updateItem } from '../Redux/actions/actions';
+import { useStoreState, useStoreActions } from "easy-peasy";
+// import { ReactForm, setDefaultProps } from 'react-forms';
 
 const useStyles = makeStyles({
   container: {
@@ -39,23 +39,17 @@ const useStyles = makeStyles({
 
 const AddEdit = () => {
 
-  const users = useSelector((state: any) => state.users);
-  const dispatch = useDispatch();
+  const users: IUser[] = useStoreState((state: any) => state.users);
+  // const dispatch = useDispatch();
 
   const classes = useStyles();
   const initialFormState: IUser = { id: users.length, name: '', age: '', gender: ''};
 	const [ currentUser, setCurrentUser ] = useState(initialFormState)
 	const [ editing, setEditing ] = useState(false)
 
-  const addUser = (user: IBaseUser) => {
-    const u: IUser = {...user , id: users.length +1}
-    dispatch(addItem(u));
-	}
+  const addUser: any = useStoreActions((actions: any) => actions.addUser);
 
-  const updateUser = (id: number, updatedUser: IUser) => {
-		setEditing(false)
-    dispatch(updateItem(updatedUser));
-	}
+  const updateUser: any = useStoreActions((actions: any) => actions.updateUser);
 
   const editRow = (user: IUser) => {
 		setEditing(true)
@@ -63,11 +57,9 @@ const AddEdit = () => {
 		setCurrentUser(user)
 	}
 
-  const deleteUser = (id: number) => {
-		setEditing(false)
-
-		dispatch(deleteItem(id));
-	}
+  const deleteUser: any = useStoreActions(
+    (actions: any) => actions.deleteUser
+  );
 
   const handleSubmit = () => {
     addUser(currentUser);
@@ -84,7 +76,7 @@ const AddEdit = () => {
   };
 
   const handleUpdateSubmit = () => {
-    updateUser(currentUser.id ,currentUser);
+    updateUser(currentUser);
     setEditing(false);
     clearForm();
   };

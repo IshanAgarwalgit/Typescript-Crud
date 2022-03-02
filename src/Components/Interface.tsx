@@ -6,4 +6,3 @@ export interface IBaseUser {
   export interface IUser extends IBaseUser {
     id: number;
   }
-  
