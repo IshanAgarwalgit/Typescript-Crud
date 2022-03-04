@@ -1,10 +1,6 @@
-import React from 'react';
 import { useState } from 'react';
 import ViewUsers from './ViewUsers';
 import { IUser } from './Interface';
-import { Button } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import { makeStyles } from "@mui/styles";
 import { useStoreState, useStoreActions } from "easy-peasy";
 import { ReactForm, setDefaultProps } from 'react-forms';
@@ -22,20 +18,7 @@ const useStyles = makeStyles({
     justifyContent: "center",
     margin: 'auto',
     width: '50%',
-  },
-  formfont: {
-    fontSize: '50px',
-  },
-  Inputfields: {
-    margin: 15,
-    width: "80%",
-  },
-  buttons: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignContent: "center",
-  },
+  }
 });
 
 const AddEdit = () => {
@@ -51,14 +34,11 @@ const AddEdit = () => {
     gender: ""
   });
 
-	const [ editing, setEditing ] = useState(false)
-
   const addUser: any = useStoreActions((actions: any) => actions.addUser);
 
   const updateUser: any = useStoreActions((actions: any) => actions.updateUser);
 
   const editRow = (user: IUser) => {
-		setEditing(true)
     setButtonName("Update")
 		setCurrentUser(user)
 	}
@@ -83,25 +63,13 @@ const AddEdit = () => {
 
   const handleUpdateSubmit = (event: IUser) => {
     updateUser(event);
-    setEditing(false);
     setButtonName("Add");
     clearForm();
   };
 
-  const handleCancelSubmit = (event: IUser) => {
-    setEditing(false);
-    clearForm();
-  }
-
   const handleSubmit = (event: IUser) => {
     buttonName === "Add" ? handleAddSubmit(event) : handleUpdateSubmit(event);
   }
-
-  const handleInputChange = (event: React.ChangeEvent<any>) => {
-		const { name, value } = event.target
-
-		setCurrentUser({ ...currentUser, [name]: value })
-	}
 
   setDefaultProps('text', { required: true, variant: "filled", size: 'small' });
   setDefaultProps('select', { required: true, variant: "filled", autowidth: "true", size: 'small' });
@@ -116,7 +84,7 @@ const AddEdit = () => {
 
   const GenderProps = {
     label: "Gender",
-    options: [{ name: 'Male', value: 'Male' }, { name: 'Female', value: 'Female' }, { name: 'Choose', value: '' }],
+    options: [{ name: 'Male', value: 'Male' }, { name: 'Female', value: 'Female' }],
   }
   const myConfig = [{
     type: 'text',
