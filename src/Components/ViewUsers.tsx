@@ -39,7 +39,7 @@ interface IProps {
     deleteUser: (id: number) => void;
   }
 
-const ViewUsers: React.FunctionComponent<IProps> = (props) => {
+const ViewUsers: React.FunctionComponent<IProps> = ({users , editRow, deleteUser}) => {
 
   const classes = useStyle();
 
@@ -58,8 +58,8 @@ const ViewUsers: React.FunctionComponent<IProps> = (props) => {
       </TableRow>
     </TableHead>
     <TableBody>
-      {props.users.length > 0 ? (
-        props.users.map(user => (
+      {users.length > 0 ? (
+        users.map(user => (
           <TableRow key={user.id}>
             <StyledTableCell component="th" scope="row">{user.name}</StyledTableCell>
             <StyledTableCell align="center">{user.age}</StyledTableCell>
@@ -69,7 +69,7 @@ const ViewUsers: React.FunctionComponent<IProps> = (props) => {
                 variant="contained"
                 size='small'
                 onClick={() => {
-                  props.editRow(user)
+                  editRow(user)
                 }}
                 className="button muted-button"
               >
@@ -79,7 +79,7 @@ const ViewUsers: React.FunctionComponent<IProps> = (props) => {
                 variant="contained"
                 size='small'
                 color='error'
-                onClick={() => props.deleteUser(user.id)}
+                onClick={() => deleteUser(user.id)}
                 className="button muted-button"
               >
                 Delete
