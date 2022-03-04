@@ -59,7 +59,7 @@ const AddEdit = () => {
 
   const editRow = (user: IUser) => {
 		setEditing(true)
-    setButtonName("Update");
+    setButtonName("Update")
 		setCurrentUser(user)
 	}
 
@@ -67,8 +67,8 @@ const AddEdit = () => {
     (actions: any) => actions.deleteUser
   );
 
-  const handleAddSubmit = () => {
-    addUser(currentUser);
+  const handleAddSubmit = (event: IUser) => {
+    addUser(event);
     clearForm();
   };
 
@@ -81,20 +81,20 @@ const AddEdit = () => {
     });
   };
 
-  const handleUpdateSubmit = () => {
-    updateUser(currentUser);
+  const handleUpdateSubmit = (event: IUser) => {
+    updateUser(event);
     setEditing(false);
     setButtonName("Add");
     clearForm();
   };
 
-  const handleCancelSubmit = () => {
+  const handleCancelSubmit = (event: IUser) => {
     setEditing(false);
     clearForm();
   }
 
   const handleSubmit = (event: IUser) => {
-    buttonName === "Add" ? handleAddSubmit() : handleUpdateSubmit();
+    buttonName === "Add" ? handleAddSubmit(event) : handleUpdateSubmit(event);
   }
 
   const handleInputChange = (event: React.ChangeEvent<any>) => {
