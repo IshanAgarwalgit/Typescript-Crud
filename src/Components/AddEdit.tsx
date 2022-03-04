@@ -7,7 +7,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { makeStyles } from "@mui/styles";
 import { useStoreState, useStoreActions } from "easy-peasy";
-// import { ReactForm, setDefaultProps } from 'react-forms';
+import { ReactForm, setDefaultProps } from 'react-forms';
+import * as YUP from 'yup';
 
 const useStyles = makeStyles({
   container: {
@@ -42,9 +43,14 @@ const AddEdit = () => {
   const users: IUser[] = useStoreState((state: any) => state.users);
   // const dispatch = useDispatch();
 
-  const classes = useStyles();
-  const initialFormState: IUser = { id: users.length, name: '', age: '', gender: ''};
-	const [ currentUser, setCurrentUser ] = useState(initialFormState)
+  const classes = useStyles()
+  const [currentUser, setCurrentUser] = useState<IUser>({
+    id: 0,
+    name: "",
+    age: "",
+    gender: ""
+  });
+
 	const [ editing, setEditing ] = useState(false)
 
   const addUser: any = useStoreActions((actions: any) => actions.addUser);
@@ -53,7 +59,7 @@ const AddEdit = () => {
 
   const editRow = (user: IUser) => {
 		setEditing(true)
-
+    setButtonName("Update");
 		setCurrentUser(user)
 	}
 
@@ -61,7 +67,7 @@ const AddEdit = () => {
     (actions: any) => actions.deleteUser
   );
 
-  const handleSubmit = () => {
+  const handleAddSubmit = () => {
     addUser(currentUser);
     clearForm();
   };
@@ -78,6 +84,7 @@ const AddEdit = () => {
   const handleUpdateSubmit = () => {
     updateUser(currentUser);
     setEditing(false);
+    setButtonName("Add");
     clearForm();
   };
 
@@ -86,66 +93,76 @@ const AddEdit = () => {
     clearForm();
   }
 
+  const handleSubmit = (event: IUser) => {
+    buttonName === "Add" ? handleAddSubmit() : handleUpdateSubmit();
+  }
+
   const handleInputChange = (event: React.ChangeEvent<any>) => {
 		const { name, value } = event.target
 
 		setCurrentUser({ ...currentUser, [name]: value })
 	}
 
+  setDefaultProps('text', { required: true, variant: "filled", size: 'small' });
+  setDefaultProps('select', { required: true, variant: "filled", autowidth: "true", size: 'small' });
+
+  const NameProps = {
+    label: "Name"
+  }
+
+  const AgeProps = {
+    label: "Age"
+  }
+
+  const GenderProps = {
+    label: "Gender",
+    options: [{ name: 'Male', value: 'Male' }, { name: 'Female', value: 'Female' }, { name: 'Choose', value: '' }],
+  }
+  const myConfig = [{
+    type: 'text',
+    valueKey: 'name',
+    fieldProps: { ...NameProps }
+  },
+  {
+    type: 'text',
+    valueKey: 'age',
+    fieldProps: { ...AgeProps }
+  },
+  {
+    type: 'select',
+    valueKey: 'gender',
+    fieldProps: { ...GenderProps }
+  }
+  ]
+
+  const [buttonName, setButtonName] = useState("Add");
+  const submitButtonProps = { color: "primary" as const, fullwidth: "true"}
+
+  const loaderProps = { variant: "determinate" as const}
+
+  const actionConfig = {
+    submitButtonText: buttonName,
+    submitButtonProps: submitButtonProps,
+    loaderProps: loaderProps
+  }
+
+  const formValidation = YUP.object({
+    name: YUP.string().required("Enter a valid name!"),
+    age: YUP.string().required("Enter a valid age!"),
+    gender: YUP.string().required("Select a gender!")
+  })
+
   return <><div className={classes.container}>
-    <form className={classes.formfont}
-    onSubmit={event => {
-    event.preventDefault()
-    if (currentUser.gender==='') return alert("Invalid Gender")
-    if (editing===false) {
-      handleSubmit()
-    }
-    else{
-      handleUpdateSubmit()
-    }}}>
-      <TextField
-      className={classes.Inputfields}
-      label="Full Name"
-      type="text"
-      name="name"
-      variant="filled" size='small'
-      required
-      value={currentUser.name}
-      onChange={handleInputChange}
-      />
-      <TextField
-      className={classes.Inputfields}
-      label="Age"
-      type="number"
-      name="age"
-      variant="filled" size='small'
-      required
-      value={currentUser.age}
-      onChange={handleInputChange}
-      />
-      <TextField
-              className={classes.Inputfields}
-              select
-              label="Gender"
-              name="gender"
-              value={currentUser.gender}
-              variant="filled" size='small'
-              required
-              onChange={handleInputChange}
-            >
-                <MenuItem value=''>Choose</MenuItem>
-                <MenuItem value='Male'>Male</MenuItem>
-                <MenuItem value='Female'>Female</MenuItem>
-            </TextField>
-      <div className={classes.buttons}>
-      {
-        !editing ? (<Button variant="contained" size='small' type="submit">Add</Button>) : 
-        (<><Button variant="contained" size='small' color='primary' type="submit">Update</Button>
-        <Button variant="contained" color='error' size='small' onClick={handleCancelSubmit}>Cancel</Button></>)
-      }
+        <ReactForm
+          formId='react-form-crud'
+          config={myConfig}
+          initialValues={currentUser}
+          validationSchema={formValidation}
+          onSubmit={handleSubmit}
+          actionConfig={actionConfig}
+          enableReinitialize
+        />
       </div>
-    </form>
-    </div>
     <div className={classes.Cards}>
     <ViewUsers users={users} editRow={editRow} deleteUser={deleteUser}/>
     </div>
